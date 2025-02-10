@@ -20,4 +20,12 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 import i18n from './locales'
 
-app.use(router).use(store).use(i18n).mount('#app')
+// 全局混入
+import useDicts from '@mixins/DIctsPlugin'	
+
+// 全局组件
+// 分页
+import pagination from '@components/Pagination/index.vue'
+app.component('pagination',pagination)
+
+app.use(router).use(store).use(i18n).use(useDicts).mount('#app')

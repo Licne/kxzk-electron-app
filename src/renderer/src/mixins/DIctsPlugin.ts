@@ -6,6 +6,7 @@ export default function useDicts( app:App ){
 
     async function getDicts( data:string[] ){
         let res = await queryBatch(data);
+        // console.log( res );
         dicts.value = res.data;
     }
     

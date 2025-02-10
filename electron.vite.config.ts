@@ -27,6 +27,7 @@ export default defineConfig({
         '@interface': resolve('src/renderer/src/interface'),
         '@layout':resolve('src/renderer/src/layout'),
         '@hooks':resolve('src/renderer/src/hooks'),
+        '@mixins':resolve('src/renderer/src/mixins'),
       }
     },
     server:{

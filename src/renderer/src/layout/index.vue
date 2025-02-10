@@ -49,7 +49,9 @@
                 <UserBar></UserBar>
             </TopBar>
             <TagBar></TagBar>
-            <router-view></router-view>
+            <div class="aminui-main">
+                <router-view />
+            </div>
         </div>
     </section>
 </template>
@@ -234,5 +236,9 @@ const toggle_menuIsCollapse = () => {
 
 .el-menu {
     border-right: 0px;
+}
+.aminui-main{
+    flex:1;
+    overflow: auto;
 }
 </style>
