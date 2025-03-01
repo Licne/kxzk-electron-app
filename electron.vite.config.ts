@@ -28,6 +28,7 @@ export default defineConfig({
         '@layout':resolve('src/renderer/src/layout'),
         '@hooks':resolve('src/renderer/src/hooks'),
         '@mixins':resolve('src/renderer/src/mixins'),
+        '@directives':resolve('src/renderer/src/directives'),
       }
     },
     server:{

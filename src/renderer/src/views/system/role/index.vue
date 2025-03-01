@@ -54,9 +54,9 @@
                                 <el-table-column label="操作" align="center" width="220" fixed="right">
                                     <template #default="{ row }">
                                         <div class="sys-table-main-actions">
-                                            <el-link icon="edit" type="primary" :underline="false">编辑</el-link>
+                                            <el-link icon="edit" type="primary" :underline="false" @click="btnRoleDialog(row.id)">编辑</el-link>
                                             <el-link icon="delete" type="danger" :underline="false"
-                                                style="margin: 0 8px">删除</el-link>
+                                                style="margin: 0 8px" @click="roleDel(row.id)">删除</el-link>
                                             <router-link class="el-link el-link--error" type="success"
                                                 to="/">分配用户</router-link>
                                         </div>
@@ -79,18 +79,20 @@
         <RoleDialog
             v-model:dialogVisible="dialogVisible"
              v-if="dialogVisible"
+            :roleUpdateId="roleUpdateId"
+            @roleChange="getRolePage"
         ></RoleDialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { rolePage, Role } from '@api/role';
+import { rolePage, Role, roleDelete } from '@api/role';
 import tool from '@utils/tool';
-import { Table } from 'element-plus';
+import { ElMessage, ElMessageBox, Table } from 'element-plus';
 import { TableColumn, TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults';
 import { get } from 'http';
 import { Component, ComponentInternalInstance, getCurrentInstance, onBeforeMount, ref } from 'vue';
-import RoleDialog from '../roleDialog.vue';
+import RoleDialog from '../role/roleDialog.vue';
 // import pagination from '@components/pagination/index.vue';
 const totals = ref(0);
 const tableData = ref<Role[]>([]);
@@ -149,12 +151,48 @@ const formatter = (row: Role, column: TableColumnCtx<Role>, Value: number) => {
 }
 
 
-// 新增角色
+// 新增角色 编辑角色
+const roleUpdateId = ref('');
 // 控制dialog显示隐藏
 const dialogVisible = ref(false);
-const btnRoleDialog = () => {
+const btnRoleDialog = (id:string) => {
+    if (typeof id === 'string') {
+        roleUpdateId.value = id;
+    }else{
+        roleUpdateId.value = '';
+    }
     dialogVisible.value = true;
 
+}
+
+// 删除角色
+const roleDel = (id:string) => {
+    ElMessageBox.confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '删除',
+        type: 'error'
+    }).then(async () => {
+        let res = await roleDelete(id);
+        if (res.code !== '200') {
+            ElMessage({
+                type: 'error',
+                message: res.msg
+            });
+            return;
+        }
+
+        ElMessage({
+            type: 'success',
+            message: '删除成功!'
+            
+        });
+
+        getRolePage();
+    }).catch(() => {
+        ElMessage({
+            type: 'info',
+            message: '已取消删除'
+        });
+    });
 }
 </script>
 

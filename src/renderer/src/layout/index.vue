@@ -118,7 +118,7 @@ const toggle_menuIsCollapse = () => {
         flex-direction: column;
         width: 65px;
         height: 100vh;
-        overflow: hidden;
+        // overflow: hidden;
         background: #222b45;
 
         .aminui-side-split-top {

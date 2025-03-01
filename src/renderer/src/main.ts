@@ -26,6 +26,10 @@ import useDicts from '@mixins/DIctsPlugin'
 // 全局组件
 // 分页
 import pagination from '@components/Pagination/index.vue'
+import { AuthDirectives } from '@directives/auths.directives'
 app.component('pagination',pagination)
+
+// 全局指令
+app.directive(AuthDirectives.name, AuthDirectives)
 
 app.use(router).use(store).use(i18n).use(useDicts).mount('#app')
