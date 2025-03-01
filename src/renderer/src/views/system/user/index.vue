@@ -102,6 +102,7 @@
             v-if="dialogVisible"
             v-model:dialogVisible="dialogVisible"
             @userChange="getUser"
+            :userUpdateId="userUpdateId"
         ></userDialog>
     </div>
 </template>

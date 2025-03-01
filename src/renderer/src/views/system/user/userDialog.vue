@@ -2,6 +2,7 @@
     <el-dialog
         v-model="dialogVisible"
         width="800px"
+        :title="userUpdateId!='' ? '修改用户' : '新增用户' "
         @close="close"
     >
         <template #default>
@@ -125,17 +126,21 @@
 
 <script setup lang="ts">
 import { ref , reactive , onBeforeMount ,  getCurrentInstance , ComponentInternalInstance } from 'vue'
-import { unitList , IUnitList , IPostPage , postPage , IRole , rolePage ,IUser , userAdd, userUpdate} from '@api/systemUser'
-import { ElTree } from 'element-plus'
+import { unitList , IUnitList , IPostPage , postPage , IRole , rolePage ,IUser , userAdd , userGet , userUpdate} from '@api/systemUser'
 const props = defineProps({
     dialogVisible:{
         type:Boolean,
         default:false
+    },
+    userUpdateId:{
+        type:String,
+        default:''
     }
 })
 const dialogVisible = ref(  props.dialogVisible );
+const userUpdateId = ref( props.userUpdateId );
 //表单数据
-const userForm = reactive<Partial<IUser>>({
+let userForm = reactive<Partial<IUser>>({
     username: '',
     password: '',
     realName: '',
@@ -175,13 +180,20 @@ onBeforeMount(async ()=>{
     if( proxy ){
         (proxy as any).getDicts(['system_global_gender','system_global_status']);
     }
+    //编辑获取详情
+     if( userUpdateId.value !='' ){
+        let updateData = await userGet( userUpdateId.value );
+        let { postIds ,  roleIds  , user } = updateData.data;
+        Object.assign(userForm,user);
+        userForm.roleIds = roleIds;
+        userForm.postIds = postIds;
+    }
     //所属机构
     getUnitList();
     //所属岗位
     getPostPage();
     //角色列表
     getRolePage();
-    
 })
 
 //关闭dialog
@@ -191,19 +203,25 @@ const close = ()=>{
 }
 
 //添加
-const addUser = async ()=>{
-    let res = await userAdd(userForm);
-    console.log( res );
+const addUser = ()=>{
+    userAdd(userForm);
 }
+
 //修改
 const updateUser = ()=>{
     userUpdate(userForm);
 }
+
+
 //确认
 const onSubmit = async ()=>{
-    addUser();
-    close();
+    if( userUpdateId.value !='' ){
+        await updateUser();
+    }else{
+        await addUser();
+    }
     emit('userChange');
+    close();
 }
 </script>
 
