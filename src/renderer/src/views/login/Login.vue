@@ -115,7 +115,11 @@ const mousedown = (event) => {
                 appX: x,
                 appY: y
             }
-            window.electron.ipcRenderer.invoke('custom-adsorption', data);
+            // window.electron.ipcRenderer.invoke('custom-adsorption', data);
+            window.electron.ipcRenderer.invoke('renderer-to-main', {
+                name:'custom-adsorption',
+                data
+            });
         }
     };
     document.onmouseup = () => {
@@ -124,7 +128,10 @@ const mousedown = (event) => {
 }
 // 关闭窗口
 const closeWin = (): void => {
-    window.electron.ipcRenderer.invoke('close-login')
+    // window.electron.ipcRenderer.invoke('close-login')
+    window.electron.ipcRenderer.invoke('renderer-to-main', {
+                name:'close-login',
+            });
 }
 
 // 换肤

@@ -204,12 +204,12 @@ const close = ()=>{
 
 //添加
 const addUser = ()=>{
-    userAdd(userForm);
+    return userAdd(userForm);
 }
 
 //修改
 const updateUser = ()=>{
-    userUpdate(userForm);
+    return userUpdate(userForm);
 }
 
 

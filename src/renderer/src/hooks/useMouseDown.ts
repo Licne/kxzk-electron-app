@@ -22,7 +22,11 @@ export default function useWindowDrag(): {
           appX: x,
           appY: y,
         };
-        window.electron.ipcRenderer.invoke('custom-adsorption', data);
+        // window.electron.ipcRenderer.invoke('custom-adsorption', data);
+        window.electron.ipcRenderer.invoke('renderer-to-main', {
+          name:'custom-adsorption',
+          data
+      });
       }
     };
 

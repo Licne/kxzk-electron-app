@@ -72,7 +72,10 @@ const pmenu = ref<Parent>({});
 const nextMenu = ref<Parent[] | undefined>([]);
 
 onBeforeMount(() => {
-    window.electron.ipcRenderer.invoke('resize-window');
+    // window.electron.ipcRenderer.invoke('resize-window');
+    window.electron.ipcRenderer.invoke('renderer-to-main', {
+                name:'resize-window'
+            });
     //一级菜单数据
     menu.value = useMenuStore().menu;
     routesPath();

@@ -186,16 +186,16 @@ const close = ()=>{
 
 
 //新增
-const addRole = async ()=>{
-    await roleAdd({
+const addRole = ()=>{
+    return roleAdd({
         permissionIds:menuTreeRef.value!.getCheckedKeys() as string[],
         ...roleForm
     })
 }
 
 //修改
-const updateRole = async()=>{
-    await roleUpdate({
+const updateRole = ()=>{
+    return roleUpdate({
         permissionIds:menuTreeRef.value!.getCheckedKeys() as string[],
         ...roleForm
     })
