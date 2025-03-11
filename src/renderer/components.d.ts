@@ -53,5 +53,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Versions: typeof import('./src/components/Versions.vue')['default']
+    WangEditor: typeof import('./src/components/wangeditor/wangEditor.vue')['default']
   }
 }
