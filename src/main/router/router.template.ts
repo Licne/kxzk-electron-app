@@ -1,5 +1,11 @@
+import https from 'https'
+import fs from 'fs'
+
 import EventRoute from './EventRoute'
 const routers = new Array();
+
+import TaskFrame from '../frame/TaskFrame'
+let taskWindow:TaskFrame | null = null;
 /*
  * 关闭软件
  */
@@ -90,5 +96,67 @@ routers.push(
     })    
 )
 
+/*
+ * 打开窗口
+ */
+routers.push(
+    new EventRoute('open-window-frame',(api,{data})=>{
+        //下载任务
+        if( data.url =='/tasklist'){
+            if( !taskWindow || taskWindow.isDestroyed() ){
+                taskWindow = new TaskFrame(data.url);
+                taskWindow.create();
+            }else{
+                taskWindow.show();
+            }
+        }
+    })    
+)
+
+/*
+ * 异步下载 ： 关闭窗口
+ */
+routers.push(
+    new EventRoute('task-close',(api,{data})=>{
+        taskWindow?.destroy();
+        taskWindow = null;
+    })    
+)
+
+/*
+ * 异步下载 ： 下载
+ */
+
+routers.push(
+    new EventRoute('download-http-file',(api,{data})=>{
+        const url = data.url;
+        const fileName = url.substring(url.lastIndexOf('/')+1);
+        https.get(url,(res)=>{
+            api.dialog.showSaveDialog({
+                title:'请选择保存的位置',
+                defaultPath:fileName,
+            }).then((result)=>{
+                if( result.filePath ){
+                    const file = fs.createWriteStream( result.filePath );
+                    res.pipe( file );
+                    file.on('finish',()=>{
+                        file.close();
+                        api.dialog.showMessageBox({
+                            title:'提示信息',
+                            message:'下载完成',
+                            type:'info'
+                        })
+                    }).on('error',(err)=>{
+                        api.dialog.showMessageBox({
+                            title:'提示信息',
+                            message:err,
+                            type:'error'
+                        })
+                    })
+                }
+            })
+        })
+    })    
+)
 
 export default routers;

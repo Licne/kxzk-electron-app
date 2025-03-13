@@ -1,4 +1,3 @@
-//路由配置规则数组
 export const AppRoutes = [
     { 
         path: "/", 
@@ -10,5 +9,10 @@ export const AppRoutes = [
         path: "/login", 
         name:'登录',
         component: ()=>import('@views/login/Login.vue') 
+    },
+    {
+        path:'/tasklist',
+        name:'下载',
+        component: ()=>import('@views/home/task.vue') 
     }
 ]

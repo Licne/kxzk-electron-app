@@ -123,3 +123,11 @@ export const subjectUpdata = ( data:IsubjectUpdata ):Promise<IsubjectAdd>=>{
 	return http.post<IsubjectAdd>('/crm/teach/subject/update',data);
 }
 
+
+//导出科目
+export const subjectExport = ( data:{
+	subjectName:string | undefined;
+	enabled:string | undefined;
+} ):Promise<IsubjectAdd>=>{
+	return http.get<IsubjectAdd>('/crm/teach/subject/export',data);
+}

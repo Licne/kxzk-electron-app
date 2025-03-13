@@ -8,7 +8,7 @@
             </div>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item @click="outLogin()">退出登录</el-dropdown-item>
+                    <el-dropdown-item @click="outLogin">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
@@ -19,71 +19,51 @@
         </div>
 
         <!--下载-->
-        <div class="panel-item">
+        <div class="panel-item" @click="goTask">
             <el-icon><Download /></el-icon>
         </div>
 
         <!--缩小-->
-        <div class="panel-item" @click="minWin()">
+        <div class="panel-item" @click="minWin">
             <el-icon><Minus /></el-icon>
         </div>
 
         <!--放大-->
-        <div class="panel-item" @click="maxWin()">
+        <div class="panel-item" @click="maxWin">
             <el-icon><FullScreen /></el-icon>
         </div>
 
         <!--关闭-->
-        <div class="panel-item" @click="winClose()">
+        <div class="panel-item" @click="winClose">
             <el-icon><Close /></el-icon>
         </div>
 
     </div>
 </template>
 
+
 <script setup lang="ts">
 import { useUserStore } from '@store/useUserStore';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
-
 const userStore = useUserStore();
+import { storeToRefs } from 'pinia'
 const { userInfo } = storeToRefs(userStore);
-const router = useRouter()
-// console.log(userInfo)
 
-// 退出应用
-const winClose = ()=>{
-    ElMessageBox.confirm("确认",'是否退出?',{
+
+//退出登录
+import { ElMessage , ElMessageBox } from 'element-plus';
+import { useRouter } from 'vue-router'
+const router = useRouter();
+const outLogin = ()=>{
+    ElMessageBox.confirm("确认",'是否退出登录',{
         type:'warning',
         confirmButtonText:'退出'
     }).then(()=>{
-        // window.electron.ipcRenderer.invoke('win-close');
-        window.electron.ipcRenderer.invoke('renderer-to-main', {
-                name:'win-close'
-            });
-    }).catch(()=>{
-        ElMessage({
-            type:'info',
-            message:'取消退出'
-        })
-    })
-}
-// 退出登录
-const outLogin = () => {
-    ElMessageBox.confirm("确认","是否退出誊录",{
-        type:'warning',
-        confirmButtonText:'退出',
-    }).then(()=> {
         ElMessage({
             type:'success',
             message:'退出登录'
         })
-        // window.electron.ipcRenderer.invoke('out-login');
-        window.electron.ipcRenderer.invoke('renderer-to-main', {
-                name:'out-login'
-            });
-        localStorage.setItem('TOKEN','')
+        window.electron.ipcRenderer.invoke('out-login');
+        localStorage.setItem('TOKEN','');
         router.replace({
             path:'/login'
         });
@@ -95,20 +75,47 @@ const outLogin = () => {
     })
 }
 
-// 最小化
-const minWin = () => {
-    // window.electron.ipcRenderer.invoke('min-win');
-    window.electron.ipcRenderer.invoke('renderer-to-main', {
-                name:'min-win'
-            });
+//退出应用
+const winClose = ()=>{
+    ElMessageBox.confirm("确认",'是否退出?',{
+        type:'warning',
+        confirmButtonText:'退出'
+    }).then(()=>{
+        window.electron.ipcRenderer.invoke('renderer-to-main',{
+            name:'win-close'
+        });
+    }).catch(()=>{
+        ElMessage({
+            type:'info',
+            message:'取消退出'
+        })
+    })
 }
-// 全屏
-const maxWin = () => {
-    // window.electron.ipcRenderer.invoke('max-win');
-    window.electron.ipcRenderer.invoke('renderer-to-main', {
-                name:'max-win'
-            });
+
+//最小化
+const minWin = ()=>{
+    window.electron.ipcRenderer.invoke('renderer-to-main',{
+        name:'min-win'
+    });
 }
+
+//最大化
+const maxWin = ()=>{
+    window.electron.ipcRenderer.invoke('renderer-to-main',{
+        name:'max-win'
+    });
+}
+
+//下载
+const goTask = ()=>{
+    window.electron.ipcRenderer.invoke('renderer-to-main',{
+        name:'open-window-frame',
+        data:{
+            url:'/tasklist'
+        }
+    });
+}
+
 </script>
 
 <style scoped lang="scss">
